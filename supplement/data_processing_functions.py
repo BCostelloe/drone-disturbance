@@ -331,7 +331,7 @@ def flight_stages(old_log_directory, flight_df, clip_df):
     flight_df['proximity_end'] = np.nan
     for i in files:
         log = pd.read_csv(i)
-        flight_name = i.split('_')[3].split('b')[1]
+        flight_name = i.split('_')[1].split('b')[1]
 
         if flight_name in clip_df['flight'].values:
 
