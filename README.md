@@ -11,6 +11,8 @@ The supplement folder contains the raw data files and code used to generate the 
 - data-processing.ipynb -
 - interobserver-reliability.ipynb -
 #### clean-data folder
+#### interobserver-reliability folder
+#### map-processing folder
 #### processed-data folder
 #### raw-data folder
 - exchanges.csv -
