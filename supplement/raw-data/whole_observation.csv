@@ -1,4 +1,4 @@
-﻿observation,flight_num,clip_num,ob_time,flight_time,spp,any_resting,any_foraging,any_alert,any_traveling,any_fleeing,group_resting,group_foraging,group_alert,group_traveling,group_fleeing
+﻿observation,flight_num,clip_num,ob_time,flight_time,species,any_resting,any_foraging,any_alert,any_traveling,any_fleeing,group_resting,group_foraging,group_alert,group_traveling,group_fleeing
 2,1,1,0,3:24,buf,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE
 2,1,2,7,10:24,buf,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE
 2,1,3,14,17:24,buf,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE
