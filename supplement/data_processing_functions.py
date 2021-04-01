@@ -222,7 +222,9 @@ def get_locations(vid_kp, align_df, log_directory):
     log_files = glob.glob(log_directory + '*.csv')
 
     # get clip start times from vid_kp
-    clip_df = pd.melt(vid_kp, id_vars = ['flight'], value_vars = ['first_clip_start', 'second_clip_start'],
+    #clip_df = pd.melt(vid_kp, id_vars = ['flight'], value_vars = ['first_clip_start', 'second_clip_start'],
+                     #var_name = 'clip_type', value_name = 'clip_start_vid')
+    clip_df = pd.melt(vid_kp, id_vars = ['flight'], value_vars = ['first_clip_start'],
                      var_name = 'clip_type', value_name = 'clip_start_vid')
     clip_df['clip_type'] = [i.split('_')[0] for i in clip_df['clip_type']]
 
@@ -270,7 +272,7 @@ def get_locations(vid_kp, align_df, log_directory):
 
         # Now get the lat, lon and alt from the point where the clip starts
         clip1_start = clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'first'), 'clip_start_log'].values[0]
-        clip2_start = clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_log'].values[0]
+        #clip2_start = clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_log'].values[0]
         # Check if the exact clip-start time is in the log time column; if so, take the lat and lon from that line
         if sum(log['time_millisecond'].isin([clip1_start])) > 0:
             clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'first'), 'clip_start_lat'] = log.loc[log['time_millisecond'] == clip1_start, 'latitude'].values[0]
@@ -292,24 +294,24 @@ def get_locations(vid_kp, align_df, log_directory):
                     clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'first'), 'clip_start_lon'] = log.loc[log['time_millisecond'] == after, 'longitude'].values[0]
                     clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'first'), 'clip_start_ascent'] = log.loc[log['time_millisecond'] == after, 'ascent_m'].values[0]
         # now repeat for second clip
-        if sum(log['time_millisecond'].isin([clip2_start])) > 0:
-            clip_df.loc[(clip_df['flight'] == name) & ( clip_df['clip_type'] == 'second'), 'clip_start_lat'] = log.loc[log['time_millisecond'] == clip2_start, 'latitude'].values[0]
-            clip_df.loc[(clip_df['flight'] == name) & ( clip_df['clip_type'] == 'second'), 'clip_start_lon'] = log.loc[log['time_millisecond'] == clip2_start, 'longitude'].values[0]
-            clip_df.loc[(clip_df['flight'] == name) & ( clip_df['clip_type'] == 'second'), 'clip_start_ascent'] = log.loc[log['time_millisecond'] == clip2_start, 'ascent_m'].values[0]
-        else:
-            before = log.loc[log['time_millisecond'] < clip2_start, 'time_millisecond'].max()
-            after = log.loc[log['time_millisecond'] > clip2_start, 'time_millisecond'].min()
-            before_diff = abs(before - clip2_start)
-            after_diff = abs(after - clip2_start)
-            if (pd.notnull(after_diff) & (before_diff <= 1000)):  # this removes cases where the drone log cuts out early
-                if before_diff <= after_diff: # if the time before the start time is closer to the start time, take the before time
-                    clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lat'] = log.loc[log['time_millisecond'] == before, 'latitude'].values[0]
-                    clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lon'] = log.loc[log['time_millisecond'] == before, 'longitude'].values[0]
-                    clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_ascent'] = log.loc[log['time_millisecond'] == before, 'ascent_m'].values[0]
-                else: # otherwise take the after time
-                    clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lat'] = log.loc[log['time_millisecond'] == after, 'latitude'].values[0]
-                    clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lon'] = log.loc[log['time_millisecond'] == after, 'longitude'].values[0]
-                    clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_ascent'] = log.loc[log['time_millisecond'] == after, 'ascent_m'].values[0]
+        #if sum(log['time_millisecond'].isin([clip2_start])) > 0:
+        #    clip_df.loc[(clip_df['flight'] == name) & ( clip_df['clip_type'] == 'second'), 'clip_start_lat'] = log.loc[log['time_millisecond'] == clip2_start, 'latitude'].values[0]
+        #    clip_df.loc[(clip_df['flight'] == name) & ( clip_df['clip_type'] == 'second'), 'clip_start_lon'] = log.loc[log['time_millisecond'] == clip2_start, 'longitude'].values[0]
+        #    clip_df.loc[(clip_df['flight'] == name) & ( clip_df['clip_type'] == 'second'), 'clip_start_ascent'] = log.loc[log['time_millisecond'] == clip2_start, 'ascent_m'].values[0]
+        #else:
+        #    before = log.loc[log['time_millisecond'] < clip2_start, 'time_millisecond'].max()
+        #    after = log.loc[log['time_millisecond'] > clip2_start, 'time_millisecond'].min()
+        #    before_diff = abs(before - clip2_start)
+        #    after_diff = abs(after - clip2_start)
+        #    if (pd.notnull(after_diff) & (before_diff <= 1000)):  # this removes cases where the drone log cuts out early
+        #        if before_diff <= after_diff: # if the time before the start time is closer to the start time, take the before time
+        #            clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lat'] = log.loc[log['time_millisecond'] == before, 'latitude'].values[0]
+        #            clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lon'] = log.loc[log['time_millisecond'] == before, 'longitude'].values[0]
+        #            clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_ascent'] = log.loc[log['time_millisecond'] == before, 'ascent_m'].values[0]
+        #        else: # otherwise take the after time
+        #            clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lat'] = log.loc[log['time_millisecond'] == after, 'latitude'].values[0]
+        #            clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_lon'] = log.loc[log['time_millisecond'] == after, 'longitude'].values[0]
+        #            clip_df.loc[(clip_df['flight'] == name) & (clip_df['clip_type'] == 'second'), 'clip_start_ascent'] = log.loc[log['time_millisecond'] == after, 'ascent_m'].values[0]
     clip_df.drop(['offset'], axis = 1, inplace = True)
     return clip_df
 
@@ -321,8 +323,8 @@ def flight_stages(old_log_directory, flight_df, clip_df):
 
     flight_df['clip1_start'] = np.nan
     flight_df['clip1_end'] = np.nan
-    flight_df['clip2_start'] = np.nan
-    flight_df['clip2_end'] = np.nan
+    #flight_df['clip2_start'] = np.nan
+    #flight_df['clip2_end'] = np.nan
     flight_df['ascent_start'] = np.nan
     flight_df['ascent_end'] = np.nan
     flight_df['approach_start'] = np.nan
@@ -341,10 +343,10 @@ def flight_stages(old_log_directory, flight_df, clip_df):
             flight_df.loc[flight_df['flight'] == flight_name, 'clip1_end'] = clip1_start + 120000
 
             # then clip2 - this starts when the second clip starts and goes for 2 minutes (120000 milliseconds)
-            if ((clip_df['flight'] == flight_name) & (clip_df['clip_type'] == 'second')).any():
-                clip2_start = clip_df[(clip_df['flight'] == flight_name) & (clip_df['clip_type'] == 'second')]['clip_start_log'].values[0]
-                flight_df.loc[flight_df['flight'] == flight_name, 'clip2_start'] = clip2_start
-                flight_df.loc[flight_df['flight'] == flight_name, 'clip2_end'] = clip2_start + 120000
+            #if ((clip_df['flight'] == flight_name) & (clip_df['clip_type'] == 'second')).any():
+            #    clip2_start = clip_df[(clip_df['flight'] == flight_name) & (clip_df['clip_type'] == 'second')]['clip_start_log'].values[0]
+            #    flight_df.loc[flight_df['flight'] == flight_name, 'clip2_start'] = clip2_start
+            #    flight_df.loc[flight_df['flight'] == flight_name, 'clip2_end'] = clip2_start + 120000
 
             # ascent (this starts when ascent_m is over 0 and ends when the drone stops ascending (over 30m) and starts moving away from the launchpoint)
             log['ascent_shift'] = (log['ascent_m'].shift(-1) - log['ascent_m'])
